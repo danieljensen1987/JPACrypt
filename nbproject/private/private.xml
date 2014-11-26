@@ -3,9 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group name="JavaScript">
-            <file>file:/C:/Users/danie_000/Desktop/CPH-Dat/3.%20Semester/_NetBeans/JPAcrypt/src/handlers/LoginHandler.java</file>
-            <file>file:/C:/Users/danie_000/Desktop/CPH-Dat/3.%20Semester/_NetBeans/JPAcrypt/src/facades/UserFacadeDB.java</file>
-            <file>file:/C:/Users/danie_000/Desktop/CPH-Dat/3.%20Semester/_NetBeans/JPAcrypt/sql/tables.sql</file>
+            <file>file:/C:/Users/danie_000/Desktop/CPH-Dat/3.%20Semester/_NetBeans/JPAcrypt/src/TrestModel/User.java</file>
+            <file>file:/C:/Users/danie_000/Desktop/CPH-Dat/3.%20Semester/_NetBeans/JPAcrypt/test/TeestModel/UserTest.java</file>
+            <file>file:/C:/Users/danie_000/Desktop/CPH-Dat/3.%20Semester/_NetBeans/JPAcrypt/src/TrestModel/SimpleUser.java</file>
+            <file>file:/C:/Users/danie_000/Desktop/CPH-Dat/3.%20Semester/_NetBeans/JPAcrypt/src/entities/User.java</file>
         </group>
     </open-files>
 </project-private>

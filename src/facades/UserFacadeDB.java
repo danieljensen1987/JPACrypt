@@ -31,10 +31,10 @@ public class UserFacadeDB implements IUserFacade
     {
         User user = em.find(User.class, userName);
         if (user == null) {
-            throw new NotFoundException("User not found");
+            throw new NotFoundException("Fail");
         } else {
             if (!user.getPassword().equals(password)) {
-                throw new NotFoundException("Password inccorect");
+                throw new NotFoundException("Fail");
             }
             return "" + user.getRole();
         }
