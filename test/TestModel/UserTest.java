@@ -14,7 +14,7 @@ public class UserTest
     @Before
     public void setUp()
     {
-        role = new RoleMockUp();
+        role = new RoleMockUp("admin");
         user = new SimpleUser("aa", "test", role);
     }
 
@@ -28,5 +28,10 @@ public class UserTest
     public void getPassword()
     {
         assertThat(user.getPassword(), is("test"));
+    }
+    
+    @Test
+    public void getRole(){
+        assertThat(user.getRole(), is(role));
     }
 }

@@ -4,7 +4,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import exceptions.NotFoundException;
+import exceptions.UserNotFoundException;
 import facades.UserFacadeDB;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -17,11 +17,11 @@ public class LoginHandler implements HttpHandler
     UserFacadeDB facade;
     private static final boolean dev = false;
 
-    public LoginHandler() throws NotFoundException
+    public LoginHandler() throws UserNotFoundException
     {
         facade = UserFacadeDB.getFacade(false);
         if (dev) {
-            facade.createTestData();
+//            facade.createTestData();
         }
     }
 
@@ -51,7 +51,7 @@ public class LoginHandler implements HttpHandler
                 } catch (NumberFormatException nufe) {
                     response = "Id is not a number";
                     statusCode = 404;
-                } catch (NotFoundException nofe) {
+                } catch (UserNotFoundException nofe) {
                     response = nofe.getMessage();
                     statusCode = 404;
                 }
@@ -71,7 +71,7 @@ public class LoginHandler implements HttpHandler
                  {
                     try {
                         response = facade.login(username, password);
-                    } catch (NotFoundException nofe) {
+                    } catch (UserNotFoundException nofe) {
                         response = nofe.getMessage();
                         statusCode = 404;
                     }

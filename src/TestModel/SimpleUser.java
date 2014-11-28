@@ -2,9 +2,9 @@ package TestModel;
 
 public class SimpleUser implements User
 {
-    private String username;
-    private String password;
-    private Role role;
+    private final String username;
+    private final String password;
+    private final Role role;
 
     public SimpleUser(String username, String password, Role role)
     {

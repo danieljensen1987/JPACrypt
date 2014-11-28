@@ -3,7 +3,10 @@ package facades;
 import com.google.gson.Gson;
 import entities.Role;
 import entities.User;
-import exceptions.NotFoundException;
+import exceptions.AlreadyExcistException;
+import exceptions.RoleNotFoundException;
+import exceptions.SameException;
+import exceptions.UserNotFoundException;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -18,30 +21,82 @@ public class UserFacadeDB implements IUserFacade
 
     public static UserFacadeDB getFacade(boolean b)
     {
-        if (true){
+        if (true) {
             facade = new UserFacadeDB();
         }
         return facade;
     }
-    
-    
 
     @Override
-    public String login(String userName, String password) throws NotFoundException
+    public String login(String userName, String password) throws UserNotFoundException
     {
         User user = em.find(User.class, userName);
         if (user == null) {
-            throw new NotFoundException("Fail");
+            throw new UserNotFoundException("Fail");
         } else {
             if (!user.getPassword().equals(password)) {
-                throw new NotFoundException("Fail");
+                throw new UserNotFoundException("Fail");
             }
             return "" + user.getRole();
         }
     }
 
-    public void createTestData() throws NotFoundException
+    @Override
+    public boolean addUser(String userName, String password, String role) throws RoleNotFoundException, AlreadyExcistException
     {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        boolean add = false;
+        Role r = em.find(Role.class, role);
+        if (r == null) {
+            throw new RoleNotFoundException("Fail");
+        } else {
+            User user = em.find(User.class, userName);
+            if (user != null) {
+                throw new AlreadyExcistException("Fail");
+            } else {
+                user = new User(userName, password, r);
+                em.getTransaction().begin();
+                em.persist(user);
+                em.getTransaction().commit();
+                add = true;
+            }
+        }
+        return add;
     }
+
+    @Override
+    public boolean changePassword(String userName, String password) throws UserNotFoundException, SameException
+    {
+        boolean change = false;
+        User user = em.find(User.class, userName);
+        if (user == null) {
+            throw new UserNotFoundException("No User with given username");
+        }
+        if (user.getPassword().equals(password)) {
+            throw new SameException("Same Password");
+        } else {
+            user.setPassword(password);
+            em.getTransaction().begin();
+            em.merge(user);
+            em.getTransaction().commit();
+            change = true;
+        }
+        return change;
+    }
+
+    @Override
+    public boolean deleteUser(String userName) throws UserNotFoundException
+    {
+        boolean delete = false;
+        User user = em.find(User.class, userName);
+        if (user == null) {
+            throw new UserNotFoundException("User not found");
+        } else {
+            em.getTransaction().begin();
+            em.remove(user);
+            em.getTransaction().commit();
+            delete = true;
+        }
+        return delete;
+    }
+
 }

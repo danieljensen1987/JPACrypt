@@ -70,10 +70,7 @@ public class Role implements Serializable
             return false;
         }
         Role other = (Role) object;
-        if ((this.rolename == null && other.rolename != null) || (this.rolename != null && !this.rolename.equals(other.rolename))) {
-            return false;
-        }
-        return true;
+        return !((this.rolename == null && other.rolename != null) || (this.rolename != null && !this.rolename.equals(other.rolename)));
     }
 
     @Override
