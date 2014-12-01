@@ -65,19 +65,20 @@ public class UserFacadeDB implements IUserFacade
     }
 
     @Override
-    public boolean changePassword(String userName, String newPassword, String oldPassword) throws UserNotFoundException, SameException, WrongOldPasswordException
+    public boolean changePassword(String userName, String oldPassword, String newPassword) throws UserNotFoundException, SameException, WrongOldPasswordException
     {
         boolean change = false;
         User user = em.find(User.class, userName);
         if (user == null) {
             throw new UserNotFoundException("No User with given username");
         }
+        if (!user.getPassword().equals(oldPassword)) {
+            throw new WrongOldPasswordException("Wrong Password");
+        }
         if (user.getPassword().equals(newPassword)) {
             throw new SameException("Same Password");
-        } 
-        if(oldPassword != user.getPassword()){
-            throw new WrongOldPasswordException("Wrong Password");
-        }else {
+
+        } else {
             user.setPassword(newPassword);
             em.getTransaction().begin();
             em.merge(user);

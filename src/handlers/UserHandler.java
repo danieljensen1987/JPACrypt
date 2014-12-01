@@ -14,8 +14,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class UserHandler implements HttpHandler
 {
@@ -26,7 +24,7 @@ public class UserHandler implements HttpHandler
     BufferedReader br;
     JsonParser jp;
     JsonObject jo;
-    String jsonQuery, username, password, role, oldPassword;
+    String jsonQuery, username, password, role, oldPassword, newPassword;
 
     public UserHandler() throws UserNotFoundException
     {
@@ -78,17 +76,15 @@ public class UserHandler implements HttpHandler
                 jo = (JsonObject) jp.parse(jsonQuery);
 
                 username = jo.get("username").getAsString();
-                password = jo.get("password").getAsString();
-                oldPassword = "";
+                oldPassword = jo.get("oldPassword").getAsString();
+                newPassword = jo.get("newPassword").getAsString();
 
                 try {
-                    response = "" + facade.changePassword(username, password, oldPassword);
-                } catch (UserNotFoundException | SameException ex) {
+                    response = "" + facade.changePassword(username, oldPassword, newPassword);
+                } catch (UserNotFoundException | SameException | WrongOldPasswordException ex) {
                     response = ex.getMessage();
                     statusCode = 404;
-                } catch (WrongOldPasswordException ex) {
-            Logger.getLogger(UserHandler.class.getName()).log(Level.SEVERE, null, ex);
-        }
+                }
 
                 break;
 
