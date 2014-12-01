@@ -8,11 +8,14 @@ import exceptions.AlreadyExcistException;
 import exceptions.RoleNotFoundException;
 import exceptions.SameException;
 import exceptions.UserNotFoundException;
+import exceptions.WrongOldPasswordException;
 import facades.UserFacadeDB;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class UserHandler implements HttpHandler
 {
@@ -23,7 +26,7 @@ public class UserHandler implements HttpHandler
     BufferedReader br;
     JsonParser jp;
     JsonObject jo;
-    String jsonQuery, username, password, role;
+    String jsonQuery, username, password, role, oldPassword;
 
     public UserHandler() throws UserNotFoundException
     {
@@ -76,13 +79,16 @@ public class UserHandler implements HttpHandler
 
                 username = jo.get("username").getAsString();
                 password = jo.get("password").getAsString();
+                oldPassword = "";
 
                 try {
-                    response = "" + facade.changePassword(username, password);
+                    response = "" + facade.changePassword(username, password, oldPassword);
                 } catch (UserNotFoundException | SameException ex) {
                     response = ex.getMessage();
                     statusCode = 404;
-                }
+                } catch (WrongOldPasswordException ex) {
+            Logger.getLogger(UserHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
                 break;
 

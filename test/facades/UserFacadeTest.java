@@ -4,6 +4,7 @@ import exceptions.AlreadyExcistException;
 import exceptions.RoleNotFoundException;
 import exceptions.SameException;
 import exceptions.UserNotFoundException;
+import exceptions.WrongOldPasswordException;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -72,9 +73,9 @@ public class UserFacadeTest
     }
     
     @Test
-    public void testChangePassword() throws SameException, UserNotFoundException
+    public void testChangePassword() throws SameException, UserNotFoundException, WrongOldPasswordException
     {
-        boolean expected = facade.changePassword("admin@test.com", "changed");
+        boolean expected = facade.changePassword("admin@test.com", "changed", "notchanged");
         assertTrue(expected);
     }
     

@@ -7,6 +7,7 @@ import exceptions.AlreadyExcistException;
 import exceptions.RoleNotFoundException;
 import exceptions.SameException;
 import exceptions.UserNotFoundException;
+import exceptions.WrongOldPasswordException;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -64,17 +65,20 @@ public class UserFacadeDB implements IUserFacade
     }
 
     @Override
-    public boolean changePassword(String userName, String password) throws UserNotFoundException, SameException
+    public boolean changePassword(String userName, String newPassword, String oldPassword) throws UserNotFoundException, SameException, WrongOldPasswordException
     {
         boolean change = false;
         User user = em.find(User.class, userName);
         if (user == null) {
             throw new UserNotFoundException("No User with given username");
         }
-        if (user.getPassword().equals(password)) {
+        if (user.getPassword().equals(newPassword)) {
             throw new SameException("Same Password");
-        } else {
-            user.setPassword(password);
+        } 
+        if(oldPassword != user.getPassword()){
+            throw new WrongOldPasswordException("Wrong Password");
+        }else {
+            user.setPassword(newPassword);
             em.getTransaction().begin();
             em.merge(user);
             em.getTransaction().commit();
