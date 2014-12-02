@@ -6,9 +6,8 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import exceptions.AlreadyExcistException;
 import exceptions.RoleNotFoundException;
-import exceptions.SameException;
 import exceptions.UserNotFoundException;
-import exceptions.WrongOldPasswordException;
+import exceptions.WrongPasswordException;
 import facades.UserFacadeDB;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -24,7 +23,7 @@ public class UserHandler implements HttpHandler
     BufferedReader br;
     JsonParser jp;
     JsonObject jo;
-    String jsonQuery, username, password, role, oldPassword, newPassword;
+    String jsonQuery, userName, password, role, currentPassword, newPassword;
 
     public UserHandler() throws UserNotFoundException
     {
@@ -54,38 +53,39 @@ public class UserHandler implements HttpHandler
                 jp = new JsonParser();
                 jo = (JsonObject) jp.parse(jsonQuery);
 
-                username = jo.get("username").getAsString();
+                userName = jo.get("userName").getAsString();
                 password = jo.get("password").getAsString();
                 role = jo.get("role").getAsString();
 
                 try {
-                    response = "" + facade.addUser(username, password, role);
+                    response = "" + facade.addUser(userName, password, role);
                 } catch (RoleNotFoundException | AlreadyExcistException ex) {
                     response = ex.getMessage();
                     statusCode = 404;
                 }
-
                 break;
 
             case "PUT":
-                isr = new InputStreamReader(he.getRequestBody(), "utf-8");
-                br = new BufferedReader(isr);
-                jsonQuery = br.readLine();
-
-                jp = new JsonParser();
-                jo = (JsonObject) jp.parse(jsonQuery);
-
-                username = jo.get("username").getAsString();
-                oldPassword = jo.get("oldPassword").getAsString();
-                newPassword = jo.get("newPassword").getAsString();
-
                 try {
-                    response = "" + facade.changePassword(username, oldPassword, newPassword);
-                } catch (UserNotFoundException | SameException | WrongOldPasswordException ex) {
+                    isr = new InputStreamReader(he.getRequestBody(), "utf-8");
+                    br = new BufferedReader(isr);
+                    jsonQuery = br.readLine();
+
+                    jp = new JsonParser();
+                    jo = (JsonObject) jp.parse(jsonQuery);
+
+                    userName = jo.get("userName").getAsString();
+                    currentPassword = jo.get("currentPassword").getAsString();
+                    newPassword = jo.get("newPassword").getAsString();
+                    response = "No Changes made";
+                    if (!currentPassword.equals(newPassword)){
+                        response = "" + facade.changePassword(userName, currentPassword, newPassword);
+                    }
+                } catch (UserNotFoundException | WrongPasswordException ex) {
                     response = ex.getMessage();
                     statusCode = 404;
                 }
-
+                
                 break;
 
             case "DELETE":
@@ -96,10 +96,10 @@ public class UserHandler implements HttpHandler
                 jp = new JsonParser();
                 jo = (JsonObject) jp.parse(jsonQuery);
 
-                username = jo.get("username").getAsString();
+                userName = jo.get("userName").getAsString();
 
                 try {
-                    response = "" + facade.deleteUser(username);
+                    response = "" + facade.deleteUser(userName);
                 } catch (UserNotFoundException ex) {
                     response = ex.getMessage();
                     statusCode = 404;

@@ -2,23 +2,23 @@ package facades;
 
 import exceptions.AlreadyExcistException;
 import exceptions.RoleNotFoundException;
-import exceptions.SameException;
 import exceptions.UserNotFoundException;
-import exceptions.WrongOldPasswordException;
+import exceptions.WrongPasswordException;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import org.junit.After;
+import org.junit.AfterClass;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
+import utilities.CloseableManager;
 
 public class UserFacadeTest
 {
 
     UserFacadeDB facade;
-    EntityManagerFactory emf;
+    static EntityManagerFactory emf;
     EntityManager em;
 
     public UserFacadeTest()
@@ -31,30 +31,37 @@ public class UserFacadeTest
         facade = UserFacadeDB.getFacade(true);
         emf = Persistence.createEntityManagerFactory("JPAcryptPU");
         em = emf.createEntityManager();
+
+        try (CloseableManager cm = new CloseableManager(emf)) {
+            cm.getTransaction().begin();
+            cm.createNativeQuery("delete from Users").executeUpdate();
+            cm.createNativeQuery("insert into Users(id, password, role) values ('admin@test.com','test','admin')").executeUpdate();
+            cm.createNativeQuery("insert into Users(id, password, role) values ('student@test.com','test','student')").executeUpdate();
+            cm.createNativeQuery("insert into Users(id, password, role) values ('teacher@test.com','test','teacher')").executeUpdate();
+            cm.getTransaction().commit();
+        }
     }
 
-    @After
-    public void tearDown()
+    @AfterClass
+    public static void tearDown()
     {
-        em.getTransaction().begin();
-        em.createNativeQuery("delete from Users").executeUpdate();
-        em.createNativeQuery("insert into Users(id, password, role) values ('admin@test.com','test','admin')").executeUpdate();
-        em.createNativeQuery("insert into Users(id, password, role) values ('student@test.com','test','student')").executeUpdate();
-        em.createNativeQuery("insert into Users(id, password, role) values ('teacher@test.com','test','teacher')").executeUpdate();
-        em.getTransaction().commit();
+        try (CloseableManager cm = new CloseableManager(emf)) {
+            cm.getTransaction().begin();
+            cm.createNativeQuery("delete from Users").executeUpdate();
+            cm.getTransaction().commit();
+        }
     }
 
     @Test
-    public void testLogin() throws UserNotFoundException, RoleNotFoundException, AlreadyExcistException
+    public void testLogin() throws UserNotFoundException, WrongPasswordException
     {
-        facade.addUser("test@test.com", "test", "admin");
-        String expected = facade.login("test@test.com", "test");
+        String expected = facade.login("admin@test.com", "test");
         String actual = "admin";
         assertEquals(expected, actual);
     }
 
     @Test(expected = UserNotFoundException.class)
-    public void testLoginFail() throws UserNotFoundException
+    public void testLoginFail() throws UserNotFoundException, WrongPasswordException
     {
         facade.login("fail", "fail");
     }
@@ -71,16 +78,17 @@ public class UserFacadeTest
     {
         facade.addUser("test", "test", "role");
     }
-    
+
     @Test
-    public void testChangePassword() throws SameException, UserNotFoundException, WrongOldPasswordException
+    public void testChangePassword() throws UserNotFoundException, WrongPasswordException
     {
-        boolean expected = facade.changePassword("admin@test.com", "changed", "notchanged");
+        boolean expected = facade.changePassword("teacher@test.com", "test", "tt");
         assertTrue(expected);
     }
-    
+
     @Test
-    public void testDeleteUser() throws UserNotFoundException, RoleNotFoundException, AlreadyExcistException{
+    public void testDeleteUser() throws UserNotFoundException, RoleNotFoundException, AlreadyExcistException
+    {
         facade.addUser("delete@me.com", "test", "student");
         boolean expected = facade.deleteUser("delete@me.com");
         assertTrue(expected);
