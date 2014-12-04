@@ -77,7 +77,7 @@ public class UserHandler implements HttpHandler
                     userName = jo.get("userName").getAsString();
                     currentPassword = jo.get("currentPassword").getAsString();
                     newPassword = jo.get("newPassword").getAsString();
-                    response = "No Changes made";
+                    
                     if (!currentPassword.equals(newPassword)){
                         response = "" + facade.changePassword(userName, currentPassword, newPassword);
                     }
