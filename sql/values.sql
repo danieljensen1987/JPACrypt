@@ -1,19 +1,10 @@
 delete from Users;
-delete from Roles;
-
-INSERT INTO ROLES (ROLENAME)
-VALUES ('admin');
-INSERT INTO ROLES (ROLENAME)
-VALUES ('teacher');
-INSERT INTO ROLES (ROLENAME)
-VALUES ('student');
-
 
 insert into Users(id, password, rolle)
-values ('admin@$2a$10$Qkd8we7LvaNM14/.NBvLEuKOa9h/R0KnjH2m7lmBOA8o6nbLDtoeW.com', '$2a$10$Qkd8we7LvaNM14/.NBvLEuKOa9h/R0KnjH2m7lmBOA8o6nbLDtoeW', 'admin');
+values ('admin@test.com', '$2a$10$Qkd8we7LvaNM14/.NBvLEuKOa9h/R0KnjH2m7lmBOA8o6nbLDtoeW', 'admin');
 
 insert into Users(id, password, rolle)
-values ('teacher@$2a$10$Qkd8we7LvaNM14/.NBvLEuKOa9h/R0KnjH2m7lmBOA8o6nbLDtoeW.com', '$2a$10$Qkd8we7LvaNM14/.NBvLEuKOa9h/R0KnjH2m7lmBOA8o6nbLDtoeW', 'teacher');
+values ('teacher@test.com', '$2a$10$Qkd8we7LvaNM14/.NBvLEuKOa9h/R0KnjH2m7lmBOA8o6nbLDtoeW', 'teacher');
 insert into Users(id, password, rolle)
 values ('sybilmcguire@maroptic.com', '$2a$10$Qkd8we7LvaNM14/.NBvLEuKOa9h/R0KnjH2m7lmBOA8o6nbLDtoeW', 'teacher');
 insert into Users(id, password, rolle)
@@ -38,7 +29,7 @@ values ('cookmaddox@maroptic.com', '$2a$10$Qkd8we7LvaNM14/.NBvLEuKOa9h/R0KnjH2m7
 
 insert into Users(id, password, rolle)
 values
-('student@$2a$10$Qkd8we7LvaNM14/.NBvLEuKOa9h/R0KnjH2m7lmBOA8o6nbLDtoeW.com', '$2a$10$Qkd8we7LvaNM14/.NBvLEuKOa9h/R0KnjH2m7lmBOA8o6nbLDtoeW', 'student');
+('student@test.com', '$2a$10$Qkd8we7LvaNM14/.NBvLEuKOa9h/R0KnjH2m7lmBOA8o6nbLDtoeW', 'student');
 insert into Users(id, password, rolle)
 values ('houstonschwartz@maroptic.com', '$2a$10$Qkd8we7LvaNM14/.NBvLEuKOa9h/R0KnjH2m7lmBOA8o6nbLDtoeW', 'student');
 insert into Users(id, password, rolle)

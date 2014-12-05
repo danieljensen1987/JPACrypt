@@ -1,7 +1,6 @@
 package facades;
 
 import exceptions.AlreadyExcistException;
-import exceptions.RoleNotFoundException;
 import exceptions.UserNotFoundException;
 import exceptions.WrongPasswordException;
 import javax.persistence.EntityManager;
@@ -35,9 +34,9 @@ public class UserFacadeTest
         try (CloseableManager cm = new CloseableManager(emf)) {
             cm.getTransaction().begin();
             cm.createNativeQuery("delete from Users").executeUpdate();
-            cm.createNativeQuery("insert into Users(id, password, role) values ('admin@test.com','test','admin')").executeUpdate();
-            cm.createNativeQuery("insert into Users(id, password, role) values ('student@test.com','test','student')").executeUpdate();
-            cm.createNativeQuery("insert into Users(id, password, role) values ('teacher@test.com','test','teacher')").executeUpdate();
+            cm.createNativeQuery("insert into Users(id, password, rolle) values ('admin@test.com','test','admin')").executeUpdate();
+            cm.createNativeQuery("insert into Users(id, password, rolle) values ('student@test.com','test','student')").executeUpdate();
+            cm.createNativeQuery("insert into Users(id, password, rolle) values ('teacher@test.com','test','teacher')").executeUpdate();
             cm.getTransaction().commit();
         }
     }
@@ -67,27 +66,21 @@ public class UserFacadeTest
     }
 
     @Test
-    public void testAddUser() throws RoleNotFoundException, AlreadyExcistException
+    public void testAddUser() throws AlreadyExcistException
     {
         boolean expected = facade.addUser("teacher", "test", "teacher");
         assertTrue(expected);
     }
 
-    @Test(expected = RoleNotFoundException.class)
-    public void testAddUserWrongRole() throws RoleNotFoundException, AlreadyExcistException
-    {
-        facade.addUser("test", "test", "role");
-    }
-
     @Test
     public void testChangePassword() throws UserNotFoundException, WrongPasswordException
     {
-        boolean expected = facade.changePassword("teacher@test.com", "test", "tt");
+        boolean expected = facade.changePassword("teacher@test.com", "tt");
         assertTrue(expected);
     }
 
     @Test
-    public void testDeleteUser() throws UserNotFoundException, RoleNotFoundException, AlreadyExcistException
+    public void testDeleteUser() throws UserNotFoundException, AlreadyExcistException
     {
         facade.addUser("delete@me.com", "test", "student");
         boolean expected = facade.deleteUser("delete@me.com");

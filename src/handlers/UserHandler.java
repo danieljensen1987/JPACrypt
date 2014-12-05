@@ -5,7 +5,6 @@ import com.google.gson.JsonParser;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import exceptions.AlreadyExcistException;
-import exceptions.RoleNotFoundException;
 import exceptions.UserNotFoundException;
 import exceptions.WrongPasswordException;
 import facades.UserFacadeDB;
@@ -59,7 +58,7 @@ public class UserHandler implements HttpHandler
 
                 try {
                     response = "" + facade.addUser(userName, password, role);
-                } catch (RoleNotFoundException | AlreadyExcistException ex) {
+                } catch (AlreadyExcistException ex) {
                     response = ex.getMessage();
                     statusCode = 404;
                 }
@@ -73,15 +72,15 @@ public class UserHandler implements HttpHandler
 
                     jp = new JsonParser();
                     jo = (JsonObject) jp.parse(jsonQuery);
-
+                    
                     userName = jo.get("userName").getAsString();
                     currentPassword = jo.get("currentPassword").getAsString();
                     newPassword = jo.get("newPassword").getAsString();
                     
                     if (!currentPassword.equals(newPassword)){
-                        response = "" + facade.changePassword(userName, currentPassword, newPassword);
+                        response = "" + facade.changePassword(userName, newPassword);
                     }
-                } catch (UserNotFoundException | WrongPasswordException ex) {
+                } catch (UserNotFoundException ex) {
                     response = ex.getMessage();
                     statusCode = 404;
                 }

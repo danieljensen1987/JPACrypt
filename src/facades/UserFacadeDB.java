@@ -1,10 +1,8 @@
 package facades;
 
 import com.google.gson.Gson;
-import entities.Role;
 import entities.User;
 import exceptions.AlreadyExcistException;
-import exceptions.RoleNotFoundException;
 import exceptions.UserNotFoundException;
 import exceptions.WrongPasswordException;
 import javax.persistence.EntityManager;
@@ -42,13 +40,13 @@ public class UserFacadeDB implements IUserFacade
             }
         }
     }
-    
+
     @Override
-    public String findUser(String userName)throws UserNotFoundException
+    public String findUser(String userName) throws UserNotFoundException
     {
         try (CloseableManager cm = new CloseableManager(emf)) {
             User user = cm.find(User.class, userName);
-            if (user == null){
+            if (user == null) {
                 throw new UserNotFoundException("No Users with that username");
             }
             Gson gson = new Gson();
@@ -57,48 +55,42 @@ public class UserFacadeDB implements IUserFacade
     }
 
     @Override
-    public boolean addUser(String userName, String password, String role) throws RoleNotFoundException, AlreadyExcistException
+    public boolean addUser(String userName, String password, String role) throws AlreadyExcistException
     {
         try (CloseableManager cm = new CloseableManager(emf)) {
             boolean add = false;
-            Role r = cm.find(Role.class, role);
-            if (r == null) {
-                throw new RoleNotFoundException("Wrong Role");
+            User user = cm.find(User.class, userName);
+            if (user != null) {
+                throw new AlreadyExcistException("Fail");
             } else {
-                User user = cm.find(User.class, userName);
-                if (user != null) {
-                    throw new AlreadyExcistException("Fail");
-                } else {
-                    user = new User(userName, password, role);
-                    cm.getTransaction().begin();
-                    cm.persist(user);
-                    cm.getTransaction().commit();
-                    add = true;
-                }
+                user = new User(userName, password, role);
+                cm.getTransaction().begin();
+                cm.persist(user);
+                cm.getTransaction().commit();
+                add = true;
+
             }
             return add;
         }
     }
 
     @Override
-    public boolean changePassword(String userName, String currentPassword, String newPassword) 
-            throws UserNotFoundException, WrongPasswordException
+    public boolean changePassword(String userName, String newPassword)
+            throws UserNotFoundException
     {
         try (CloseableManager cm = new CloseableManager(emf)) {
-            boolean change = false;
+            boolean change;
             User user = cm.find(User.class, userName);
             if (user == null) {
                 throw new UserNotFoundException("No User with given username");
             }
-            if (!user.getPassword().equals(currentPassword)) {
-                throw new WrongPasswordException("Wrong Password");
-            } else {
-                user.setPassword(newPassword);
-                cm.getTransaction().begin();
-                cm.merge(user);
-                cm.getTransaction().commit();
-                change = true;
-            }
+
+            user.setPassword(newPassword);
+            cm.getTransaction().begin();
+            cm.merge(user);
+            cm.getTransaction().commit();
+            change = true;
+
             return change;
         }
     }

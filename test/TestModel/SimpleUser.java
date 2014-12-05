@@ -4,9 +4,9 @@ public class SimpleUser implements User
 {
     private final String username;
     private final String password;
-    private final Role role;
+    private final String role;
 
-    public SimpleUser(String username, String password, Role role)
+    public SimpleUser(String username, String password, String role)
     {
         this.username = username;
         this.password = password;
@@ -26,7 +26,7 @@ public class SimpleUser implements User
     }
 
     @Override
-    public Role getRole()
+    public String getRole()
     {
         return role;
     }

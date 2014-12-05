@@ -1,8 +1,6 @@
 package facades;
 
-import entities.User;
 import exceptions.AlreadyExcistException;
-import exceptions.RoleNotFoundException;
 import exceptions.UserNotFoundException;
 import exceptions.WrongPasswordException;
 
@@ -13,9 +11,9 @@ public interface IUserFacade
     public String findUser(String userName)
             throws UserNotFoundException;
     public boolean addUser(String userName, String password, String role) 
-            throws RoleNotFoundException,AlreadyExcistException;
-    public boolean changePassword(String userName, String currentPassword, String newPassword) 
-            throws UserNotFoundException, WrongPasswordException;
+            throws AlreadyExcistException;
+    public boolean changePassword(String userName, String newPassword) 
+            throws UserNotFoundException;
     public boolean deleteUser(String userName) 
             throws UserNotFoundException;
 }

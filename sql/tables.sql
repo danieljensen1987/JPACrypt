@@ -1,9 +1,4 @@
 drop table Users;
-drop table Roles;
-
-create table Roles(
-rolename varchar(32) primary key
-);
 
 create table Users(
 id varchar(32) primary key,

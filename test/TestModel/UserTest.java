@@ -9,13 +9,11 @@ public class UserTest
 {
 
     private User user;
-    private Role role;
 
     @Before
     public void setUp()
     {
-        role = new RoleMockUp("admin");
-        user = new SimpleUser("aa", "test", role);
+        user = new SimpleUser("aa", "test", "admin");
     }
 
     @Test
@@ -32,6 +30,6 @@ public class UserTest
     
     @Test
     public void getRole(){
-        assertThat(user.getRole(), is(role));
+        assertThat(user.getRole(), is("admin"));
     }
 }
