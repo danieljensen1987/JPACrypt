@@ -18,7 +18,6 @@ public class UserFacadeDB implements IUserFacade
     private static UserFacadeDB facade = new UserFacadeDB();
     EntityManagerFactory emf = Persistence.createEntityManagerFactory("JPAcryptPU");
     EntityManager em = emf.createEntityManager();
-    private final Gson gson = new Gson();
 
     public static UserFacadeDB getFacade(boolean b)
     {
@@ -43,6 +42,19 @@ public class UserFacadeDB implements IUserFacade
             }
         }
     }
+    
+    @Override
+    public String findUser(String userName)throws UserNotFoundException
+    {
+        try (CloseableManager cm = new CloseableManager(emf)) {
+            User user = cm.find(User.class, userName);
+            if (user == null){
+                throw new UserNotFoundException("No Users with that username");
+            }
+            Gson gson = new Gson();
+            return gson.toJson(user);
+        }
+    }
 
     @Override
     public boolean addUser(String userName, String password, String role) throws RoleNotFoundException, AlreadyExcistException
@@ -57,7 +69,7 @@ public class UserFacadeDB implements IUserFacade
                 if (user != null) {
                     throw new AlreadyExcistException("Fail");
                 } else {
-                    user = new User(userName, password, r);
+                    user = new User(userName, password, role);
                     cm.getTransaction().begin();
                     cm.persist(user);
                     cm.getTransaction().commit();

@@ -5,8 +5,6 @@ import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -25,20 +23,20 @@ public class User implements Serializable
     @Basic(optional = false)
     @Column(name = "PASSWORD")
     private String password;
-    @JoinColumn(name = "ROLE", referencedColumnName = "ROLENAME")
-    @ManyToOne
-    private Role role;
+    @Basic(optional = false)
+    @Column(name = "ROLLE")
+    private String rolle;
 
     public User()
     {
         
     }
 
-    public User(String id, String password , Role role)
+    public User(String id, String password , String role)
     {
         this.id = id;
         this.password = password;
-        this.role = role;
+        this.rolle = role;
     }
 
     public String getId()
@@ -61,39 +59,21 @@ public class User implements Serializable
         this.password = password;
     }
 
-    public Role getRole()
+    public String getRole()
     {
-        return role;
+        return rolle;
     }
 
-    public void setRole(Role role)
+    public void setRole(String role)
     {
-        this.role = role;
-    }
-
-    @Override
-    public int hashCode()
-    {
-        int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object object)
-    {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof User)) {
-            return false;
-        }
-        User other = (User) object;
-        return !((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id)));
+        this.rolle = role;
     }
 
     @Override
     public String toString()
     {
-        return "" + role;
+        return "Person{" + "username=" + id
+                + ", password=" + password
+                + ", role=" + rolle + '}';
     }
-    
 }

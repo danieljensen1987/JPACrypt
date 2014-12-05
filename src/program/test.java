@@ -37,10 +37,10 @@ public class test
         User user = em.find(User.class, userName);
         em.close();
         
-        if (!user.getPassword().equals(password)){
+//        if (!user.getPassword().equals(password)){
             return null;
-        } else {
-            return user.getRole();
-        }
+//        } else {
+//            return user.getRole();
+//        }
     }
 }

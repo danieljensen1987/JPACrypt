@@ -1,5 +1,6 @@
 package handlers;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.sun.net.httpserver.HttpExchange;
@@ -50,9 +51,9 @@ public class LoginHandler implements HttpHandler
 
                     String username = jo.get("username").getAsString();
                     String password = jo.get("password").getAsString();
-                    
-                    response = facade.login(username, password);
-                } catch (UserNotFoundException | WrongPasswordException ex) {
+                    response = facade.findUser(username);
+//                    response = facade.login(username, password);
+                } catch (UserNotFoundException ex) {
                     response = ex.getMessage();
                     statusCode = 404;
                 }
