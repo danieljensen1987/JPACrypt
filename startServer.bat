@@ -1,1 +1,1 @@
-java -cp JPAcrypt.jar server.Server 9191 localhost
+java -cp JPAcrypt.jar server.Server 7070 100.85.112.53
